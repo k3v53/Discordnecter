@@ -1,9 +1,10 @@
 // ==UserScript==
-// @name        Disconnecter - State Updater
+// @name        Discordnecter - State Updater
 // @namespace   Violentmonkey Scripts
 // @match       https://discord.com/*
 // @grant       none
 // @version     1.0
+// @updateURL https://raw.githubusercontent.com/k3v53/Discordnecter/main/Discordnecter.user.js
 // @author      Me
 // @description 10/27/2020, 9:55:03 PM
 // ==/UserScript==
