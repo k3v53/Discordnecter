@@ -9,13 +9,13 @@
 // ==/UserScript==
 
 // Global Variables
-
-var avatar = document.querySelector(
-  "#app-mount > div.app-1q1i1E > div > div.layers-3iHuyZ.layers-3q14ss > div > div > div > div > div.sidebar-2K8pFh > section > div.container-3baos1 > div.avatarWrapper-2yR4wp"
-);
+console.log("Loading Discordnecter")
 const stateIdle = document.querySelector("#status-picker-idle");
 const appWindow = document.querySelector("#app-mount");
 const auth = JSON.parse(localStorage.token);
+var idleTime = 1;
+var discTime = 7;
+var timerInterval = 1;
 var appC = 0;
 var useActive = 1;
 var useDate = null;
@@ -45,11 +45,11 @@ function stateUpdater(status) {
 
 appWindow.onmouseleave = function () {
   // Test on console if works
-  // console.log('see u soon '+appC)
+   console.log('see u soon '+appC)
   var actualDate = new Date();
   useDate = actualDate;
   useActive = 0;
-  stateUpdater("idle");
+  // stateUpdater("idle");
   appC++;
 };
 
@@ -57,25 +57,80 @@ appWindow.onmouseenter = function () {
   var actualDate = new Date();
   useDate = actualDate;
   useActive = 1;
-  stateUpdater("online");
+  // stateUpdater("online");
+   console.log("Hello! "+appC)
 };
 
 setInterval(function () {
   console.log("Start Timer");
-  if (useActive == 0) {
+
+  switch (useActive) {
+    case 1:
+      let aStatus = JSON.parse(localStorage.UserSettingsStore).status;
+      if (aStatus != "online") {
+        console.log("SetOnline");
+        stateUpdater("online");
+      }
+      break;
+    case 0:
+      let aStatus = JSON.parse(localStorage.UserSettingsStore).status;
+      var actualDate = new Date();
+      var useDateA = new Date(useDate);
+      switch (aStatus) {
+        case "online":
+          console.log("Estoy Online!!");
+          if (
+            Date.parse(useDateA) + (idleTime * 1000 - 1) <
+            Date.parse(actualDate)
+          ) {
+            console.log("SetIdle");
+            stateUpdater("idle");
+          }
+          break;
+        case "idle":
+          console.log("Estoy AFK!!");
+          if (
+            Date.parse(useDateA) + (discTime * 1000 - 1) <
+            Date.parse(actualDate)
+          ) {
+            console.log("SetInvisible");
+            stateUpdater("invisible");
+          }
+          break;
+        case "invisible":
+          console.log("Estoy Desconectado D:!!");
+          break;
+        default:
+          break;
+      }
+      // console.log(useDateA);
+      // console.log(Date.parse(useDateA));
+      // console.log(Date.parse(useDateA) - Date.parse(actualDate));
+      /*
+
+*/
+      break;
+    default:
+      break;
+  }
+  /*  
+if (useActive == 0) {
     var actualDate = new Date();
     var useDateA = new Date(useDate);
     var parseD = parseInt(useDateA);
-    console.log(useDateA);
-    console.log(Date.parse(useDateA));
-    console.log(Date.parse(useDateA) - Date.parse(actualDate));
-
-    if (Date.parse(useDateA) + 900000 < Date.parse(actualDate)) {
-      stateUpdater("invisible");
+    // console.log(useDateA);
+    // console.log(Date.parse(useDateA));
+    // console.log(Date.parse(useDateA) - Date.parse(actualDate));
+    stateUpdater("online");
+    if (Date.parse(useDateA) + (idleTime-1) < Date.parse(actualDate)) {
+      stateUpdater("idle");
+      if (Date.parse(useDateA) + (discTime-1) < Date.parse(actualDate)) {
+        stateUpdater("invisible");
+      }
     }
-  }
+  } */
 
   console.log("finishTimer");
-}, 60000);
+}, timerInterval * 1000);
 
 //  $('input#authToken').value = JSON.parse(localStorage.token);
